@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo_app_flutter/data/model/home_model.dart';
+import 'package:demo_app_flutter/data/model/user_model.dart';
+import 'package:demo_app_flutter/ui/bloc/user_bloc/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -8,14 +12,26 @@ import '../bloc/user_bloc/user_bloc.dart';
 import '../bloc/user_bloc/user_event.dart';
 
 class SingleUserPage extends StatelessWidget {
+  final UserLoadedState? state;
+  int? id;
+  String? email;
+  String? firstName;
+  String? lastName;
   String? imageurl;
+
   SingleUserPage({
     super.key,
+    this.id,
+    this.email,
+    this.firstName,
+    this.lastName,
     this.imageurl,
+    this.state,
   });
 
   @override
   Widget build(BuildContext context) {
+    String? userId = id.toString();
     final height = MediaQuery.of(context).size.height * 1;
     final width = MediaQuery.of(context).size.width * 1;
     return Scaffold(
@@ -110,22 +126,21 @@ class SingleUserPage extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Mount Fuji, Tokyo",
+                                        "$firstName $lastName",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.poppins(
-                                          fontSize: 15,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w700,
                                           color: Colors.white.withOpacity(0.7),
                                         ),
                                       ),
                                       Text(
-                                        //"🌍 Tokyo, Japan",
-                                        "Price",
+                                        userId,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.poppins(
-                                          fontSize: 15,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.pink,
                                         ),
@@ -147,34 +162,24 @@ class SingleUserPage extends StatelessWidget {
                                             MainAxisAlignment.start,
                                         children: [
                                           Icon(
-                                            Icons.add_location_alt_outlined,
+                                            Icons.email,
                                             color:
                                                 Colors.white.withOpacity(0.9),
                                             size: 18,
                                           ),
                                           const SizedBox(width: 10),
                                           Text(
-                                            "🌍 Tokyo, Japan",
+                                            email ?? "",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: GoogleFonts.poppins(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.pink,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      Text(
-                                        "* 4.8",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white.withOpacity(0.8),
-                                        ),
-                                      )
                                     ],
                                   ),
                                 )
@@ -236,8 +241,15 @@ class SingleUserPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            BlocProvider.of<UserBloc>(context)
-                                .add(AddDataEvent(newData: ''));
+                            createUser(
+                              id: id,
+                              email: email,
+                              firstName: firstName,
+                              lastName: lastName,
+                              avatar: imageurl,
+                            );
+                            Future.delayed(const Duration(seconds: 2));
+                            showSnackbar(context, 'Data Added Successfully');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -277,10 +289,15 @@ class SingleUserPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            BlocProvider.of<UserBloc>(context)
-                                .add(EditDataEvent(
-                              updatedData: '',
-                            ));
+                            updateUser(
+                              id: id,
+                              email: email,
+                              firstName: firstName,
+                              lastName: lastName,
+                              avatar: imageurl,
+                            );
+                            Future.delayed(const Duration(seconds: 2));
+                            showSnackbar(context, 'Data Updated Successfully');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -320,8 +337,9 @@ class SingleUserPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            BlocProvider.of<UserBloc>(context)
-                                .add(DeleteDataEvent());
+                            deleteUser();
+                            Future.delayed(const Duration(seconds: 2));
+                            showSnackbar(context, 'Data Deleted Successfully');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -394,4 +412,64 @@ class SingleUserPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future createUser({
+  int? id,
+  String? email,
+  String? firstName,
+  String? lastName,
+  String? avatar,
+}) async {
+  final docUser =
+      FirebaseFirestore.instance.collection('user-details').doc('my-id');
+
+  int? personId = int.tryParse(docUser.id);
+
+  final user = Datum(
+    id: id,
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    avatar: avatar,
+  );
+  final json = user.toJson();
+  await docUser.set(json);
+}
+
+Future updateUser({
+  int? id,
+  String? email,
+  String? firstName,
+  String? lastName,
+  String? avatar,
+}) async {
+  final docUser =
+      FirebaseFirestore.instance.collection('user-details').doc('my-id');
+
+  docUser.update({
+    'firstName': 'Shivam',
+    'first_name': 'Rohit',
+  });
+}
+
+Future deleteUser() async {
+  final docUser =
+      FirebaseFirestore.instance.collection('user-details').doc('my-id');
+  docUser.delete();
+}
+
+void showSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2), // Set the duration
+      action: SnackBarAction(
+        label: 'Close',
+        onPressed: () {
+          // Perform some action when the user clicks on the action button
+        },
+      ),
+    ),
+  );
 }

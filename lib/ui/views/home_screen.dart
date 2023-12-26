@@ -1,10 +1,16 @@
+import 'package:demo_app_flutter/ui/bloc/home_bloc/home_bloc.dart';
+import 'package:demo_app_flutter/ui/bloc/home_bloc/home_event.dart';
+import 'package:demo_app_flutter/ui/bloc/user_bloc/user_view.dart';
 import 'package:demo_app_flutter/ui/views/single_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/home_bloc/home_state.dart';
+import '../bloc/user_bloc/user_bloc.dart';
+import '../bloc/user_bloc/user_event.dart';
 import 'full_image_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -65,6 +71,10 @@ class HomeScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => SingleUserPage(
+                                id: item.id,
+                                email: item.email,
+                                firstName: item.firstName,
+                                lastName: item.lastName,
                                 imageurl: item.avatar,
                               ),
                             ));

@@ -1,3 +1,5 @@
+import 'package:demo_app_flutter/data/model/home_model.dart';
+import 'package:demo_app_flutter/data/model/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UserState extends Equatable {}
@@ -13,8 +15,23 @@ class UserLoadingState extends UserState {
 }
 
 class UserLoadedState extends UserState {
+  final UserModel? userModel;
+
+  UserLoadedState({
+    this.userModel,
+  });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [userModel];
+}
+
+class UserOperationSuccessState extends UserState {
+  final String? message;
+
+  UserOperationSuccessState({
+    this.message,
+  });
+  @override
+  List<Object?> get props => [message];
 }
 
 class UserErrorState extends UserState {
@@ -24,5 +41,5 @@ class UserErrorState extends UserState {
     required this.message,
   });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }

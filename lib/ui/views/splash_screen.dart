@@ -39,11 +39,11 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "  Travel 🌍",
+                "🌍",
                 style: GoogleFonts.dancingScript(
                   letterSpacing: 0.6,
                   color: Colors.white,
-                  fontSize: 35,
+                  fontSize: 70,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -56,9 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontSize: 18.0,
                   ),
                   children: const [
-                    TextSpan(text: "  Find Your Dream\n"),
-                    WidgetSpan(child: SizedBox(height: 15)),
-                    TextSpan(text: "Destination With Us"),
+                    TextSpan(text: "  Exploring the world\n"),
                   ],
                 ),
               ),

@@ -34,15 +34,17 @@ class HomeView extends StatelessWidget {
             );
           }
           if (state is HomeScreenLoadedState) {
-            return EasyRefresh(
-              controller: EasyRefreshController(),
-              onRefresh: () {
-                BlocProvider.of<HomeBloc>(context).add(HomeScreenAddEvent());
-              },
-              child: HomeScreen(state: state),
-            );
+            return HomeScreen(state: state);
           } else if (state is HomeScreenEmptyState) {
             return const Center(child: Text("No Data Found"));
+          } else if (state is HomeScreenErrorState) {
+            return Scaffold(
+              body: Center(
+                child: Text(
+                  state.message,
+                ),
+              ),
+            );
           }
           return const SizedBox();
         },

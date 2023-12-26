@@ -1,62 +1,42 @@
 // To parse this JSON data, do
 //
-//     final homeModel = homeModelFromJson(jsonString);
+//     final userModel = userModelFromJson(jsonString);
 
 import 'dart:convert';
 
-HomeModel homeModelFromJson(String str) => HomeModel.fromJson(json.decode(str));
+UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
-String homeModelToJson(HomeModel data) => json.encode(data.toJson());
+String userModelToJson(UserModel data) => json.encode(data.toJson());
 
-class HomeModel {
-  int? page;
-  int? perPage;
-  int? total;
-  int? totalPages;
-  List<Datum>? data;
+class UserModel {
+  Data? data;
   Support? support;
 
-  HomeModel({
-    this.page,
-    this.perPage,
-    this.total,
-    this.totalPages,
+  UserModel({
     this.data,
     this.support,
   });
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
-        page: json["page"],
-        perPage: json["per_page"],
-        total: json["total"],
-        totalPages: json["total_pages"],
-        data: json["data"] == null
-            ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
         support:
             json["support"] == null ? null : Support.fromJson(json["support"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "page": page,
-        "per_page": perPage,
-        "total": total,
-        "total_pages": totalPages,
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data?.toJson(),
         "support": support?.toJson(),
       };
 }
 
-class Datum {
-  int? id;
+class Data {
+  String? id;
   String? email;
   String? firstName;
   String? lastName;
   String? avatar;
 
-  Datum({
+  Data({
     this.id,
     this.email,
     this.firstName,
@@ -64,7 +44,7 @@ class Datum {
     this.avatar,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
         email: json["email"],
         firstName: json["first_name"],

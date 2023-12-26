@@ -1,4 +1,3 @@
-import 'package:demo_app_flutter/ui/views/single_user_page.dart';
 import 'package:demo_app_flutter/ui/views/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -24,9 +23,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.seedBlue),
       ),
       home: const SplashScreen(),
-      routes: {
-        '/first': (context) => SingleUserPage(),
-      },
     );
   }
 }

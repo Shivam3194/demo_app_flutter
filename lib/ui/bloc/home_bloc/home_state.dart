@@ -20,7 +20,7 @@ class HomeScreenLoadedState extends HomeState {
     required this.fieldData,
   });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [fieldData];
 }
 
 class HomeScreenErrorState extends HomeState {
