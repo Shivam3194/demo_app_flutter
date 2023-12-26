@@ -9,7 +9,7 @@ import '../../../data/repo/home_repo_impl.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   HomeRepo homeRepo = HomeRepoImpl();
-  // final FireStoreService fireStoreService = FireStoreService();
+
   UserBloc() : super(UserInitialState()) {
     on<UserAddEvent>(
       (event, emit) async {
@@ -30,8 +30,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         try {
           emit(UserLoadingState());
 
-          // await fireStoreService.addUserDetails(event.userModel!);
-
           emit(UserLoadedState());
         } catch (e) {
           emit(UserErrorState(message: 'Failed to add Data.'));
@@ -42,8 +40,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       (event, emit) async {
         try {
           emit(UserLoadingState());
-
-          // await fireStoreService.updateUserDetails(event.userModel!);
 
           emit(UserLoadedState());
         } catch (e) {
